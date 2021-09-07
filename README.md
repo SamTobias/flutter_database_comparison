@@ -4,9 +4,9 @@ Comparing SQLite database packages for Flutter
 
 ## Packages
 
-- (SQFlite)[https://github.com/tekartik/sqflite]
-- (Floor)[https://floor.codes/]
-- (Moor)[https://moor.simonbinder.eu/]
+- [SQFlite](https://github.com/tekartik/sqflite)
+- [Floor](https://floor.codes/) (Pending comparison)
+- [Moor](https://moor.simonbinder.eu/) (Pending comparison)
 
 ## Requirements
 
