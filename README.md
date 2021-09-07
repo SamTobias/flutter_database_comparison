@@ -22,6 +22,7 @@ What do I think a good database package needs?
 ## Comparison
 
 | Feature | SQFlite |
+---
 | Good documentation | ☑ |
 | Active development | ✅ |
 | Migration support | ✅ |
