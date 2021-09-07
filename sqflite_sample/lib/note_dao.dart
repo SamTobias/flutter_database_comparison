@@ -37,6 +37,7 @@ class NoteDAO {
         text: maps[index]['text'],
         date: DateTime.parse(maps[index]['date']),
         completed: maps[index]['completed'] == 1,
+        active: maps[index]['active'] == 1,
         id: maps[index]['id'],
       );
     });
@@ -51,6 +52,7 @@ class NoteDAO {
       text: maps[0]['text'],
       date: DateTime.parse(maps[0]['date']),
       completed: maps[0]['completed'] == 1,
+      active: maps[0]['active'] == 1,
       id: maps[0]['id'],
     );
   }

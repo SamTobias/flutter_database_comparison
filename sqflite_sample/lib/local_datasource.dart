@@ -11,21 +11,35 @@ class LocalDatasource {
         onCreate: (db, version) {
           final batch = db.batch();
 
-          _createNotesTableV1(batch);
+          _createNotesTableV2(batch);
 
           return batch.commit();
         },
-        version: 1,
+        onUpgrade: (db, oldVersion, newVersion) {
+          final batch = db.batch();
+
+          if (oldVersion == 1) {
+            _updateNotesTableV1toV2(batch);
+          }
+          
+          return batch.commit();
+        },
+        onDowngrade: onDatabaseDowngradeDelete,
+        version: 2,
       );
     }
 
     return _database!;
   }
 
-  void _createNotesTableV1(Batch batch) {
+  void _createNotesTableV2(Batch batch) {
     batch.execute(
-      "CREATE TABLE notes(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL, date TEXT NOT NULL, completed INTEGER NOT NULL DEFAULT FALSE)",
+      "CREATE TABLE notes (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, text TEXT NOT NULL, date TEXT NOT NULL, completed INTEGER NOT NULL DEFAULT FALSE, active INTEGER NOT NULL DEFAULT TRUE)",
     );
+  }
+
+  void _updateNotesTableV1toV2(Batch batch) {
+    batch.execute("ALTER TABLE notes ADD COLUMN active INTEGER NOT NULL DEFAULT TRUE");
   }
 
   Future close() async => _database?.close();
