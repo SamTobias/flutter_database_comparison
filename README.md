@@ -27,10 +27,11 @@ What do I think a good database package needs?
 | Active development | ✅
 | Migration support | ✅
 | Cross-platform support | ✅
+| Easy to use | ✅
 
 ## Examples
 
-You can find each package implementation inside this sample project, but 
+- [SQFlite](./sqflite_sample)
 
 ## Contributing
 
