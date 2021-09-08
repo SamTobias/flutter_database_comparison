@@ -5,7 +5,7 @@ Comparing SQLite database packages for Flutter
 ## Packages
 
 - [SQFlite](https://github.com/tekartik/sqflite)
-- [Floor](https://floor.codes/) (Pending comparison)
+- [Floor](https://floor.codes/)
 - [Moor](https://moor.simonbinder.eu/) (Pending comparison)
 
 ## Requirements
@@ -21,17 +21,22 @@ What do I think a good database package needs?
 
 ## Comparison
 
-| Feature | SQFlite
---- | ---
-| Good documentation | ☑
-| Active development | ✅
-| Migration support | ✅
-| Cross-platform support | ✅
-| Easy to use | ✅
+| Feature | SQFlite | Floor | Moor
+--- | --- | --- | ---
+| Cross-platform support | ✅ | ✅ | ✅
+| Migration | ✅ | ✅ | ✅
+| Good documentation | ☑ | ✅ | 🤔
+| Active development | ✅ | ☑ | ❌
+| Easy to use | ✅ | ✅ | 🤔
+| In Memory Database | 🤔 | ✅ | ✅
+| Null Safety Entities | ❌ | ✅ | ✅
+| Encription | ☑ | ❌ | ✅ 
 
 ## Examples
 
 - [SQFlite](./sqflite_sample)
+- [Floor](./floor_sample)
+- [Moor](./moor_sample)
 
 ## Contributing
 
