@@ -15,13 +15,15 @@ class NoteDAO {
 
   Future<void> update(Note note) async {
     final database = await _datasource.getDatabase();
-    await database.update('notes', note.toMap(), where: 'id = ?', whereArgs: [note.id]);
+    await database
+        .update('notes', note.toMap(), where: 'id = ?', whereArgs: [note.id]);
   }
 
   Future<void> markAsCompleted(int id) async {
     final database = await _datasource.getDatabase();
     // await database.rawUpdate("UPDATE notes SET completed = 1 WHERE id = ?", [id]);
-    await database.update("notes", {"completed":  1}, where: "id = ?", whereArgs: [id]);
+    await database.update("notes", {"completed": 1},
+        where: "id = ?", whereArgs: [id]);
   }
 
   Future<void> delete(int id) async {
@@ -43,17 +45,24 @@ class NoteDAO {
     });
   }
 
-  Future<Note> getById(int id) async {
+  Future<Note?> getById(int id) async {
     final database = await _datasource.getDatabase();
-    // final List<Map<String, dynamic>> maps = await database.rawQuery("SELECT * FROM notes WHERE id = ?", [id]);
-    final List<Map<String, dynamic>> maps = await database.query("notes", where: "'id = ?'", whereArgs: [id]);
+    // final List<Map<String, dynamic>> list = await database.rawQuery("SELECT * FROM notes WHERE id = ?", [id]);
+    final List<Map<String, dynamic>> list =
+        await database.query("notes", where: "'id = ?'", whereArgs: [id]);
+
+    if (list.length == 0) {
+      return null;
+    }
+
+    final note = list[0];
 
     return Note(
-      text: maps[0]['text'],
-      date: DateTime.parse(maps[0]['date']),
-      completed: maps[0]['completed'] == 1,
-      active: maps[0]['active'] == 1,
-      id: maps[0]['id'],
+      text: note['text'],
+      date: DateTime.parse(note['date']),
+      completed: note['completed'] == 1,
+      active: note['active'] == 1,
+      id: note['id'],
     );
   }
 }

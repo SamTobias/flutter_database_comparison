@@ -22,7 +22,7 @@ class NoteRepository {
     return await _noteDao.getAll();
   }
 
-  Future<Note> getById(int id) async {
+  Future<Note?> getById(int id) async {
     return await _noteDao.getById(id);
   }
 }
