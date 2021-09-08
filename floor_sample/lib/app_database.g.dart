@@ -65,7 +65,7 @@ class _$AppDatabase extends AppDatabase {
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 1,
+      version: 2,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -81,7 +81,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `notes` (`id` INTEGER, `text` TEXT NOT NULL, `date` INTEGER NOT NULL, `completed` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `notes` (`id` INTEGER, `text` TEXT NOT NULL, `date` INTEGER NOT NULL, `completed` INTEGER NOT NULL, `active` INTEGER NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -105,7 +105,8 @@ class _$NoteDAO extends NoteDAO {
                   'id': item.id,
                   'text': item.text,
                   'date': _dateTimeConverter.encode(item.date),
-                  'completed': item.completed ? 1 : 0
+                  'completed': item.completed ? 1 : 0,
+                  'active': item.active ? 1 : 0
                 }),
         _noteUpdateAdapter = UpdateAdapter(
             database,
@@ -115,7 +116,8 @@ class _$NoteDAO extends NoteDAO {
                   'id': item.id,
                   'text': item.text,
                   'date': _dateTimeConverter.encode(item.date),
-                  'completed': item.completed ? 1 : 0
+                  'completed': item.completed ? 1 : 0,
+                  'active': item.active ? 1 : 0
                 }),
         _noteDeletionAdapter = DeletionAdapter(
             database,
@@ -125,7 +127,8 @@ class _$NoteDAO extends NoteDAO {
                   'id': item.id,
                   'text': item.text,
                   'date': _dateTimeConverter.encode(item.date),
-                  'completed': item.completed ? 1 : 0
+                  'completed': item.completed ? 1 : 0,
+                  'active': item.active ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -154,6 +157,7 @@ class _$NoteDAO extends NoteDAO {
             text: row['text'] as String,
             date: _dateTimeConverter.decode(row['date'] as int),
             completed: (row['completed'] as int) != 0,
+            active: (row['active'] as int) != 0,
             id: row['id'] as int?));
   }
 
@@ -164,6 +168,7 @@ class _$NoteDAO extends NoteDAO {
             text: row['text'] as String,
             date: _dateTimeConverter.decode(row['date'] as int),
             completed: (row['completed'] as int) != 0,
+            active: (row['active'] as int) != 0,
             id: row['id'] as int?),
         arguments: [id]);
   }
