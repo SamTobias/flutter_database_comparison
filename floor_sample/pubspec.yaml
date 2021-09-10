@@ -18,6 +18,7 @@ dev_dependencies:
     sdk: flutter
   floor_generator: ^1.1.0
   build_runner: ^2.0.0
+  flutter_lints: ^1.0.4
 
 flutter:
   uses-material-design: true
