@@ -8,4 +8,6 @@ class Notes extends Table {
   DateTimeColumn get date => dateTime()();
 
   BoolColumn get completed => boolean().withDefault(const Constant(false))();
+
+  BoolColumn get active => boolean().withDefault(const Constant(true))(); // Field added with version 2
 }

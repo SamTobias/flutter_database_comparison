@@ -57,10 +57,12 @@ class _MyHomePageState extends State<MyHomePage> {
             onEditingComplete: () {
               setState(() {
                 _repository?.insert(Note(
-                    description: _textFieldController.text,
-                    date: DateTime.now(),
-                    id: 0,
-                    completed: false));
+                  description: _textFieldController.text,
+                  date: DateTime.now(),
+                  id: 0,
+                  completed: false,
+                  active: true,
+                ));
                 _textFieldController.clear();
               });
             },

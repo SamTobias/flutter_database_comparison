@@ -12,11 +12,13 @@ class Note extends DataClass implements Insertable<Note> {
   final String description;
   final DateTime date;
   final bool completed;
+  final bool active;
   Note(
       {required this.id,
       required this.description,
       required this.date,
-      required this.completed});
+      required this.completed,
+      required this.active});
   factory Note.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -29,6 +31,8 @@ class Note extends DataClass implements Insertable<Note> {
           .mapFromDatabaseResponse(data['${effectivePrefix}date'])!,
       completed: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}completed'])!,
+      active: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}active'])!,
     );
   }
   @override
@@ -38,6 +42,7 @@ class Note extends DataClass implements Insertable<Note> {
     map['description'] = Variable<String>(description);
     map['date'] = Variable<DateTime>(date);
     map['completed'] = Variable<bool>(completed);
+    map['active'] = Variable<bool>(active);
     return map;
   }
 
@@ -47,6 +52,7 @@ class Note extends DataClass implements Insertable<Note> {
       description: Value(description),
       date: Value(date),
       completed: Value(completed),
+      active: Value(active),
     );
   }
 
@@ -58,6 +64,7 @@ class Note extends DataClass implements Insertable<Note> {
       description: serializer.fromJson<String>(json['description']),
       date: serializer.fromJson<DateTime>(json['date']),
       completed: serializer.fromJson<bool>(json['completed']),
+      active: serializer.fromJson<bool>(json['active']),
     );
   }
   @override
@@ -68,16 +75,22 @@ class Note extends DataClass implements Insertable<Note> {
       'description': serializer.toJson<String>(description),
       'date': serializer.toJson<DateTime>(date),
       'completed': serializer.toJson<bool>(completed),
+      'active': serializer.toJson<bool>(active),
     };
   }
 
   Note copyWith(
-          {int? id, String? description, DateTime? date, bool? completed}) =>
+          {int? id,
+          String? description,
+          DateTime? date,
+          bool? completed,
+          bool? active}) =>
       Note(
         id: id ?? this.id,
         description: description ?? this.description,
         date: date ?? this.date,
         completed: completed ?? this.completed,
+        active: active ?? this.active,
       );
   @override
   String toString() {
@@ -85,14 +98,17 @@ class Note extends DataClass implements Insertable<Note> {
           ..write('id: $id, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('active: $active')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(description.hashCode, $mrjc(date.hashCode, completed.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(description.hashCode,
+          $mrjc(date.hashCode, $mrjc(completed.hashCode, active.hashCode)))));
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -100,7 +116,8 @@ class Note extends DataClass implements Insertable<Note> {
           other.id == this.id &&
           other.description == this.description &&
           other.date == this.date &&
-          other.completed == this.completed);
+          other.completed == this.completed &&
+          other.active == this.active);
 }
 
 class NotesCompanion extends UpdateCompanion<Note> {
@@ -108,17 +125,20 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<String> description;
   final Value<DateTime> date;
   final Value<bool> completed;
+  final Value<bool> active;
   const NotesCompanion({
     this.id = const Value.absent(),
     this.description = const Value.absent(),
     this.date = const Value.absent(),
     this.completed = const Value.absent(),
+    this.active = const Value.absent(),
   });
   NotesCompanion.insert({
     this.id = const Value.absent(),
     required String description,
     required DateTime date,
     this.completed = const Value.absent(),
+    this.active = const Value.absent(),
   })  : description = Value(description),
         date = Value(date);
   static Insertable<Note> custom({
@@ -126,12 +146,14 @@ class NotesCompanion extends UpdateCompanion<Note> {
     Expression<String>? description,
     Expression<DateTime>? date,
     Expression<bool>? completed,
+    Expression<bool>? active,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (description != null) 'description': description,
       if (date != null) 'date': date,
       if (completed != null) 'completed': completed,
+      if (active != null) 'active': active,
     });
   }
 
@@ -139,12 +161,14 @@ class NotesCompanion extends UpdateCompanion<Note> {
       {Value<int>? id,
       Value<String>? description,
       Value<DateTime>? date,
-      Value<bool>? completed}) {
+      Value<bool>? completed,
+      Value<bool>? active}) {
     return NotesCompanion(
       id: id ?? this.id,
       description: description ?? this.description,
       date: date ?? this.date,
       completed: completed ?? this.completed,
+      active: active ?? this.active,
     );
   }
 
@@ -163,6 +187,9 @@ class NotesCompanion extends UpdateCompanion<Note> {
     if (completed.present) {
       map['completed'] = Variable<bool>(completed.value);
     }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
     return map;
   }
 
@@ -172,7 +199,8 @@ class NotesCompanion extends UpdateCompanion<Note> {
           ..write('id: $id, ')
           ..write('description: $description, ')
           ..write('date: $date, ')
-          ..write('completed: $completed')
+          ..write('completed: $completed, ')
+          ..write('active: $active')
           ..write(')'))
         .toString();
   }
@@ -204,8 +232,16 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
       requiredDuringInsert: false,
       defaultConstraints: 'CHECK (completed IN (0, 1))',
       defaultValue: const Constant(false));
+  final VerificationMeta _activeMeta = const VerificationMeta('active');
+  late final GeneratedColumn<bool?> active = GeneratedColumn<bool?>(
+      'active', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (active IN (0, 1))',
+      defaultValue: const Constant(true));
   @override
-  List<GeneratedColumn> get $columns => [id, description, date, completed];
+  List<GeneratedColumn> get $columns =>
+      [id, description, date, completed, active];
   @override
   String get aliasedName => _alias ?? 'notes';
   @override
@@ -235,6 +271,10 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     if (data.containsKey('completed')) {
       context.handle(_completedMeta,
           completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
+    }
+    if (data.containsKey('active')) {
+      context.handle(_activeMeta,
+          active.isAcceptableOrUnknown(data['active']!, _activeMeta));
     }
     return context;
   }
